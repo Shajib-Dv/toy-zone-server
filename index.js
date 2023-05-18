@@ -30,6 +30,31 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    const toysCollection = client.db("toyCollection").collection("toys");
+
+    app.get("/toys", async (req, res) => {
+      const result = await toysCollection.find().toArray();
+      res.send(result);
+    });
+
+    //get data by email
+
+    app.get("/toys/:email", async (req, res) => {
+      const email = req.params.email;
+      // console.log(email);
+      const query = { sellerEmail: email };
+      const result = await toysCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    app.post("/toys", async (req, res) => {
+      const toys = req.body;
+      // console.log(toys);
+      const result = await toysCollection.insertOne(toys);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
