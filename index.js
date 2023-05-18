@@ -55,6 +55,26 @@ async function run() {
       res.send(result);
     });
 
+    //update data by id
+    app.put("/toys/toy/:id", async (req, res) => {
+      const id = req.params.id;
+      const newToys = req.body;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedToys = {
+        $set: {
+          ...newToys,
+        },
+      };
+
+      const result = await toysCollection.updateOne(
+        query,
+        updatedToys,
+        options
+      );
+      res.send(result);
+    });
+
     app.post("/toys", async (req, res) => {
       const toys = req.body;
       // console.log(toys);
