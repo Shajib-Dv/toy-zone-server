@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
   res.send("Toys server is running...");
 });
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.dlbjtks.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -39,11 +39,18 @@ async function run() {
     });
 
     //get data by email
-
     app.get("/toys/:email", async (req, res) => {
       const email = req.params.email;
       // console.log(email);
       const query = { sellerEmail: email };
+      const result = await toysCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    //get data by id
+    app.get("/toys/toy/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
       const result = await toysCollection.find(query).toArray();
       res.send(result);
     });
