@@ -91,6 +91,14 @@ async function run() {
       res.send(result);
     });
 
+    //delete data by id
+    app.delete("/toys/toy/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await toysCollection.deleteOne(query);
+      res.send(result);
+    });
+
     app.post("/toys", async (req, res) => {
       const toys = req.body;
       // console.log(toys);
