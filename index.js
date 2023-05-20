@@ -35,7 +35,14 @@ async function run() {
 
     //get all data
     app.get("/toys", async (req, res) => {
-      const result = await toysCollection.find().toArray();
+      const page = parseInt(req.query.page) || 0;
+      const limit = parseInt(req.query.limit) || 20;
+      const skip = page * limit;
+      const result = await toysCollection
+        .find()
+        .skip(skip)
+        .limit(page)
+        .toArray();
       res.send(result);
     });
 
@@ -44,7 +51,7 @@ async function run() {
       const name = req.query.toyName;
       // console.log(name);
       const result = await toysCollection
-        .find({ toyName: { $regex: `^${name}`, $options: "i" } })
+        .find({ toyName: { $regex: name, $options: "i" } })
         .toArray();
       res.send(result);
     });
@@ -67,9 +74,13 @@ async function run() {
     //get data by email
     app.get("/toys/:email", async (req, res) => {
       const email = req.params.email;
-      // console.log(email);
+      const num = parseInt(req.query.num);
+      // console.log(req.query.num);
       const query = { sellerEmail: email };
-      const result = await toysCollection.find(query).toArray();
+      const result = await toysCollection
+        .find(query)
+        .sort({ price: num })
+        .toArray();
       res.send(result);
     });
 
