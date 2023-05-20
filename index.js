@@ -39,6 +39,16 @@ async function run() {
       res.send(result);
     });
 
+    //get data by toy name
+    app.get("/toys/name", async (req, res) => {
+      const name = req.query.toyName;
+      // console.log(name);
+      const result = await toysCollection
+        .find({ toyName: { $regex: `^${name}`, $options: "i" } })
+        .toArray();
+      res.send(result);
+    });
+
     //get limited data
     app.get("/toys/limit/:limit", async (req, res) => {
       const limit = parseInt(req.params.limit);
