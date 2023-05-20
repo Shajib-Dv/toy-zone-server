@@ -35,13 +35,13 @@ async function run() {
 
     //get all data
     app.get("/toys", async (req, res) => {
-      const page = parseInt(req.query.page) || 0;
+      const startAt = parseInt(req.query.page) || 0;
       const limit = parseInt(req.query.limit) || 20;
-      const skip = page * limit;
+      const skip = startAt * limit;
       const result = await toysCollection
         .find()
         .skip(skip)
-        .limit(page)
+        .limit(startAt)
         .toArray();
       res.send(result);
     });
