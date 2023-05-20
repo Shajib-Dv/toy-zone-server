@@ -80,6 +80,7 @@ async function run() {
       const result = await toysCollection
         .find(query)
         .sort({ price: num })
+        .collation({ locale: "en_US", numericOrdering: true })
         .toArray();
       res.send(result);
     });
